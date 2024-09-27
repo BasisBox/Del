@@ -193,5 +193,14 @@ namespace Del.Cli.Localizations {
                 return ResourceManager.GetString("Item.Deleted", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Force deletion of files or directories.
+        /// </summary>
+        internal static string Parameters_Force_Description {
+            get {
+                return ResourceManager.GetString("Parameters.Force.Description", resourceCulture);
+            }
+        }
     }
 }

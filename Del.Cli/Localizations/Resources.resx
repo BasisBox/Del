@@ -63,4 +63,7 @@
     <data name="Exceptions.InvalidSlashArgument" xml:space="preserve">
         <value>The directory argument passed is not allowed in this program for the safety of your system.</value>
     </data>
+    <data name="Parameters.Force.Description" xml:space="preserve">
+        <value>Force deletion of files or directories</value>
+    </data>
 </root>

@@ -23,13 +23,14 @@ using System.Linq;
 
 using AlastairLundy.Extensions.Collections.IEnumerables;
 
+using AlastairLundy.Extensions.IO.Directories;
+using AlastairLundy.Extensions.IO.Directories.Extensions;
+using AlastairLundy.Extensions.IO.Files;
+
 using CliUtilsLib;
 
 using Del.Cli.Helpers;
 using Del.Cli.Localizations;
-
-using Del.Library;
-using Del.Library.Extensions;
 
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -121,8 +122,10 @@ public class DeleteManyCommand : Command<DeleteManyCommand.Settings>
                 {
                     if (settings.Interactive && !settings.Force)
                     {
+                        RecursiveDirectoryExplorer recursiveDirectoryExplorer = new RecursiveDirectoryExplorer();
+                        
                         (IEnumerable<string> files, IEnumerable<string> directories, IEnumerable<string> emptyDirectories) 
-                            = RecursiveDirectoryExplorer.GetDirectoryContents(Environment.CurrentDirectory, settings.DeleteEmptyDirectory);
+                            = recursiveDirectoryExplorer.GetRecursiveDirectoryContents(Environment.CurrentDirectory, settings.DeleteEmptyDirectory);
 
                         List<string> filesToBeDeleted = InteractiveRecursiveDeletionHelper.GetFilesToBeDeleted(files).ToList();
                         List<string> directoriesToBeDeleted = InteractiveRecursiveDeletionHelper.GetDirectoriesToBeDeleted(directories).ToList();
@@ -138,7 +141,7 @@ public class DeleteManyCommand : Command<DeleteManyCommand.Settings>
                     }
                     else
                     {
-                        directoryRemover.DeleteRecursively(Environment.CurrentDirectory, settings.DeleteEmptyDirectory);
+                        directoryRemover.DeleteDirectoryRecursively(Environment.CurrentDirectory, settings.DeleteEmptyDirectory);
                     }
                 }
                 else if (Directory.Exists(fileOrDirectory))
@@ -170,7 +173,11 @@ public class DeleteManyCommand : Command<DeleteManyCommand.Settings>
                         {
                             if (settings.Interactive && !settings.Force)
                             {
-                               (IEnumerable<string> files, IEnumerable<string> directories, IEnumerable<string> emptyDirectories) = RecursiveDirectoryExplorer.GetDirectoryContents(fileOrDirectory, settings.DeleteEmptyDirectory);
+                                RecursiveDirectoryExplorer recursiveDirectoryExplorer =
+                                    new RecursiveDirectoryExplorer();
+                                
+                               (IEnumerable<string> files, IEnumerable<string> directories, IEnumerable<string> emptyDirectories) 
+                                   = recursiveDirectoryExplorer.GetRecursiveDirectoryContents(fileOrDirectory, settings.DeleteEmptyDirectory);
 
                                List<string> filesToBeDeleted = InteractiveRecursiveDeletionHelper.GetFilesToBeDeleted(files).ToList();
                                List<string> directoriesToBeDeleted = InteractiveRecursiveDeletionHelper.GetDirectoriesToBeDeleted(directories).ToList();
@@ -186,7 +193,7 @@ public class DeleteManyCommand : Command<DeleteManyCommand.Settings>
                             }
                             else
                             {
-                                directoryRemover.DeleteRecursively(fileOrDirectory, settings.DeleteEmptyDirectory);
+                                directoryRemover.DeleteDirectoryRecursively(fileOrDirectory, settings.DeleteEmptyDirectory);
                             }
                         }
                         else
